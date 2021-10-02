@@ -29,6 +29,7 @@ namespace BankAsignment.View
                 Console.WriteLine("8. Tim kiem lich su giao dich theo so tai khoan");
                 Console.WriteLine("9. Thay doi thong tin tai khoan");
                 Console.WriteLine("10. Thay doi thong tin mat khau");
+                Console.WriteLine("12. Danh sach lich su giao dich co' phan trang voi limit la 2");
                 Console.WriteLine("11. Thoat");
                 Console.WriteLine("==========================");
                 var choice = Convert.ToInt32(Console.ReadLine());
@@ -62,6 +63,9 @@ namespace BankAsignment.View
                         break;
                     case 10:
                         adminController.UpdatePassword(login); // 10. Thay đổi thông tin mật khẩu admin
+                        break;
+                    case 12:
+                        adminController.ShowListTransactionHistoryByCondition();; // 10. Thay đổi thông tin mật khẩu admin
                         break;
                 }
                 if (choice == 11){ // Thoát

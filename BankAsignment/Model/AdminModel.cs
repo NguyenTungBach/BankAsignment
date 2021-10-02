@@ -16,7 +16,7 @@ namespace BankAsignment.Model
         private static readonly string LockOrUnlockCommand = "update accounts set status = @status where account_number = @account_number";
         
         private static readonly string FindAllTransactionHistoryCommand = "select * from transaction_history";
-        private static readonly string FindAllTransactionHistoryByConditionCommand = "select * from transaction_history LIMIT {@limit} OFFSET {@offset}";
+        private static readonly string FindAllTransactionHistoryByConditionCommand = "select * from transaction_history LIMIT @limit OFFSET @offset";
         private static readonly string FindAllAccountTransactionCommand = "select * from transaction_history where senderAccountNumber = @senderAccountNumber OR receiverAccountNumber = @senderAccountNumber";
         
         // 0.1 đăng ký tài khoản Admin

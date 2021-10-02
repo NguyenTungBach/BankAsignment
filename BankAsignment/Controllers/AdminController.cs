@@ -242,26 +242,74 @@ namespace BankAsignment.Controllers
         public void ShowListTransactionHistoryByCondition()
         {
             ConsoleKeyInfo key; // nhập từ bàn phím
-            var offset = 0;
-            var limit = 2;
-            Console.WriteLine(_adminModel.CountItemTransactionHistory());
-            Console.WriteLine("Enter key:");
+            var offset = 0; // vị trí trang
+            var limit = 2; // giới hạn
+            Console.WriteLine($"Limit = {limit}");
+            Console.WriteLine("Total Item = {0}", _adminModel.CountItemTransactionHistory());
             // key = Console.ReadKey(true);
             do
             {
-                var page = offset / limit + 1;
-                var totalPage = 0; // tổng số trang
+                int page = offset / limit + 1; // page hiện tại
+                int totalPage; // tổng số trang
                 /*
                  * tổng số trang = tổng số phần tử / limit
                  * nếu tổng số phần tử / limt không dư => tổng số trang = tổng số phần tử / limt
                  * nếu tổng số phần tử / limt mà dư thì sẽ + thêm 1 => tổng số trang = tổng số phần tử / limt + 1
                  */
-
-
-
+                if (_adminModel.CountItemTransactionHistory() % limit == 0)
+                {
+                    totalPage = _adminModel.CountItemTransactionHistory() / limit;
+                    Console.WriteLine("Total page = {0}", totalPage);
+                }
+                else
+                {
+                    totalPage = _adminModel.CountItemTransactionHistory() / limit + 1;
+                    Console.WriteLine("Total page = {0}", totalPage);
+                }
+                List<TransactionHistory> resultList = _adminModel.FindAllTransactionHistoryByCondition(limit,offset);
+                if (resultList == null)
+                {
+                    Console.WriteLine("List Transaction History is empty");
+                }
+                else
+                {
+                    Console.WriteLine("---------------------------------------------------------------------------------------------------------------------------------");
+                    for (int i = 0; i < resultList.Count; i++)
+                    {
+                        TransactionHistory transaction = resultList[i];
+                        Console.WriteLine("================================");
+                        Console.WriteLine(transaction.ToString());
+                        Console.WriteLine("================================");
+                    }
+                    Console.WriteLine("---------------------------------------------------------------------------------------------------------------------------------");
+                }
+                Console.WriteLine("Enter key:");
+                Console.WriteLine($"<<Back press Z-- Page: {page}/{totalPage} --Next press C>>, End press BackSpace");
+                
                 key = Console.ReadKey(true);
-                Console.WriteLine("Your enter: " + key.KeyChar);
-                Console.WriteLine("Backspace to stop");
+                switch (key.Key)
+                {
+                    case ConsoleKey.C:
+                        Console.WriteLine("Your enter: " + key.KeyChar);
+                        if (page < totalPage) // nếu số trang nhỏ hơn tổng trang
+                        {
+                            offset += limit; // dịch thêm limit phần tử
+                        }
+                        break;
+                    
+                    case ConsoleKey.Z:
+                        Console.WriteLine("Your enter: " + key.KeyChar);
+                        if (page > 1)
+                        {
+                            offset -= limit; // lùi về limit phần tử
+                        }
+                        break;
+
+                    case ConsoleKey.Backspace:
+                        Console.WriteLine("Your enter: " + key.KeyChar);
+                        Console.WriteLine("Close view Transaction History");
+                        break;
+                }
             } while (key.Key != ConsoleKey.Backspace);
         }
 
