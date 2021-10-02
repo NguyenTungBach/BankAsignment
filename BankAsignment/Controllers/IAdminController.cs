@@ -8,6 +8,7 @@ namespace BankAsignment.Controllers
         Admin Login(); // 0.2 đăng nhập Admin
         void ShowListUser(); // 1. danh sách người dùng
         void ShowListTransactionHistory(); // 2. danh sách lịch sử giao dịch
+        void ShowListTransactionHistoryByCondition(); // 2.1 danh sách lịch sử giao dịch có điều kiện 
         Account FindUserByUserName(); // 3. tìm kiếm người dùng theo tên
         Account FindUserByAccountNumber(); // 4. tìm kiếm người dùng theo Account Number
         Account FindUserByPhoneNumber(); // 5. tìm kiếm người dùng theo Phone Number

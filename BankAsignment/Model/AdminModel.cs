@@ -16,6 +16,7 @@ namespace BankAsignment.Model
         private static readonly string LockOrUnlockCommand = "update accounts set status = @status where account_number = @account_number";
         
         private static readonly string FindAllTransactionHistoryCommand = "select * from transaction_history";
+        private static readonly string FindAllTransactionHistoryByConditionCommand = "select * from transaction_history LIMIT {@limit} OFFSET {@offset}";
         private static readonly string FindAllAccountTransactionCommand = "select * from transaction_history where senderAccountNumber = @senderAccountNumber OR receiverAccountNumber = @senderAccountNumber";
         
         // 0.1 đăng ký tài khoản Admin
@@ -75,6 +76,30 @@ namespace BankAsignment.Model
             }
         }
         
+        // 1.1 (ngoài lề) Đếm tổng số lượng phần tử trong TransactionHistory
+        public int CountItemTransactionHistory()
+        {
+            var count = 0;
+            using (var cnn = ConnectionHelper.getConnection())
+            {
+                cnn.Open();
+                MySqlCommand cmd = cnn.CreateCommand();
+                cmd.CommandText = FindAllTransactionHistoryCommand;
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+                if (reader == null)
+                {
+                    return 0;
+                }
+                while (reader.Read())
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
         // 2. Khóa và mở khóa người dùng
         public bool LockOrUnLock(string idAccount, int status)
         {
@@ -128,6 +153,39 @@ namespace BankAsignment.Model
             }
         }
         
+        // 3.1 (ngoài lề) danh sách lịch sử giao dịch có điều kiện giới hạn lấy bao nhiêu và tại vị trí nào
+        public List<TransactionHistory> FindAllTransactionHistoryByCondition(int limit, int offset)
+        {
+            List<TransactionHistory> list = new List<TransactionHistory>();
+            using (var cnn = ConnectionHelper.getConnection())
+            {
+                cnn.Open();
+                MySqlCommand cmd = cnn.CreateCommand();
+                cmd.CommandText = FindAllTransactionHistoryByConditionCommand;
+                cmd.Parameters.AddWithValue("@limit", limit);
+                cmd.Parameters.AddWithValue("@offset", offset);
+                cmd.Prepare();
+
+                MySqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var transaction = new TransactionHistory()
+                    {
+                        Id = reader.GetString("id"),
+                        SenderAccountNumber = reader.GetString("senderAccountNumber"),
+                        ReceiverAccountNumber = reader.GetString("receiverAccountNumber"),
+                        Amount = reader.GetDouble("amount"),
+                        Type = reader.GetInt32("type"),
+                        CreateAt = reader.GetDateTime("createAt"),
+                        UpdateAt = reader.GetDateTime("updateAt"),
+                        DeleteAt = reader.GetDateTime("deleteAt")
+                    };
+                    list.Add(transaction);
+                }
+                return list;
+            }
+        }
+
         //4. Cập nhật database Admin
         //4.1 thay đổi thông tin cá nhân Admin
         public Admin UpdateInfo(string id, Admin updateAccount)

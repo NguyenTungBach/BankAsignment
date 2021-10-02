@@ -152,6 +152,7 @@ namespace BankAsignment.Controllers
         //2.4 Check Check Balance Is OK Existed Start
         private bool CheckBalanceIsOK(double amount,double loginBalance)
         {
+            Console.WriteLine($"{loginBalance} - {amount} = {loginBalance - amount}");
             return (loginBalance - amount) > 30000;
         }
         //2.4 Check Check Balance Is OK Existed End
@@ -272,12 +273,12 @@ namespace BankAsignment.Controllers
             }
             else
             {
-                Console.WriteLine("Deposit success!");    
+                Console.WriteLine("Deposit success!");
             }
         }
 
         // 2. thực hiện rút tiền
-        public void WithDraw(Account login)
+        public void WithDraw(Account login,double loginBalance)
         {
             //1. Nhập dữ liệu
             TransactionHistory transactionHistory;
@@ -288,7 +289,7 @@ namespace BankAsignment.Controllers
                 //2. Validate dữ liệu
                 Dictionary<string, string> errors = new Dictionary<string, string>();
                 // nếu tiền mà dưới 30.000 thì không được rút hoặc gửi. Để còn hoạt động tiền trong ngân hàn
-                if (!CheckBalanceIsOK(transactionHistory.Amount,login.Balance)) //2.4 Check Check Balance Is OK Existed
+                if (!CheckBalanceIsOK(transactionHistory.Amount,loginBalance)) //2.4 Check Check Balance Is OK Existed
                 {
                     errors.Add("balanceIsNotEnough","Balance < 30000 => Is Not Enough, Please Deposit!");
                 }
@@ -326,7 +327,7 @@ namespace BankAsignment.Controllers
         }
 
         // 3. thực hiện chuyển tiền
-        public void Transfer(Account login)
+        public void Transfer(Account login,double loginBalance)
         {
             //1. Nhập dữ liệu
             TransactionHistory transactionHistory;
@@ -337,7 +338,7 @@ namespace BankAsignment.Controllers
                 //2. Validate dữ liệu
                 Dictionary<string, string> errors = new Dictionary<string, string>();
                 // nếu tiền mà dưới 30.000 thì không được rút hoặc gửi. Để còn hoạt động tiền trong ngân hàn
-                if (!CheckBalanceIsOK(transactionHistory.Amount,login.Balance)) //2.4 Check Check Balance Is OK Existed
+                if (!CheckBalanceIsOK(transactionHistory.Amount,loginBalance)) //2.4 Check Check Balance Is OK Existed
                 {
                     errors.Add("balanceIsNotEnough","Balance < 30000 => Is Not Enough, Please Deposit!");
                 }
@@ -374,12 +375,13 @@ namespace BankAsignment.Controllers
         }
         
         // 4. Truy vấn số dư
-        public void CheckBalance(Account login)
+        public double CheckBalance(Account login)
         {
             Account account = _accountModel.FindByAccountNumber(login.AccountNumber);
             Console.WriteLine("---------------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("Balance (so du) = {0}" ,account.Balance);
             Console.WriteLine("---------------------------------------------------------------------------------------------------------------------------------");
+            return account.Balance;
         }
 
         // 5. Thay đổi thông tin cá nhân Account

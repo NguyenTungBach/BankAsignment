@@ -238,6 +238,33 @@ namespace BankAsignment.Controllers
             Console.WriteLine("---------------------------------------------------------------------------------------------------------------------------------");
         }
 
+        // 2.1 danh sách lịch sử giao dịch có điều kiện 
+        public void ShowListTransactionHistoryByCondition()
+        {
+            ConsoleKeyInfo key; // nhập từ bàn phím
+            var offset = 0;
+            var limit = 2;
+            Console.WriteLine(_adminModel.CountItemTransactionHistory());
+            Console.WriteLine("Enter key:");
+            // key = Console.ReadKey(true);
+            do
+            {
+                var page = offset / limit + 1;
+                var totalPage = 0; // tổng số trang
+                /*
+                 * tổng số trang = tổng số phần tử / limit
+                 * nếu tổng số phần tử / limt không dư => tổng số trang = tổng số phần tử / limt
+                 * nếu tổng số phần tử / limt mà dư thì sẽ + thêm 1 => tổng số trang = tổng số phần tử / limt + 1
+                 */
+
+
+
+                key = Console.ReadKey(true);
+                Console.WriteLine("Your enter: " + key.KeyChar);
+                Console.WriteLine("Backspace to stop");
+            } while (key.Key != ConsoleKey.Backspace);
+        }
+
         // 3. tìm kiếm người dùng theo tên
         public Account FindUserByUserName()
         {

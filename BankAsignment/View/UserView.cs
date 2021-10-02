@@ -34,10 +34,10 @@ namespace BankAsignment.View
                         userController.Deposit(login); // 1. Gửi tiền
                         break;
                     case 2:
-                        userController.WithDraw(login); // 2. Rút tiền
+                        userController.WithDraw(login,userController.CheckBalance(login)); // 2. Rút tiền
                         break;
                     case 3:
-                        userController.Transfer(login); // 3. Chuyển tiền cho ai đó
+                        userController.Transfer(login,userController.CheckBalance(login)); // 3. Chuyển tiền cho ai đó
                         break;
                     case 4:
                         userController.CheckBalance(login); // 4. Kiểm tra số dư trong tài khoản
